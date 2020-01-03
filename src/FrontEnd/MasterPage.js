@@ -1,6 +1,9 @@
 import React from 'react';
 import { Layout, Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
+import { InformationPage } from './InformationPage';
+import { MonitorPage } from './MornitorPage';
+import { FormPage } from './FormPage';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -42,9 +45,20 @@ export class MasterPage extends React.Component {
                     </Menu>
                 </Sider>
                 <Layout>
-                    <Header style={{ background: '#fff', padding: 0 }} />
+                    <Header style={{ background: '#001529' }}>
+                        <h1 style={{ color: 'white' }}>{this.props.currentPage !== undefined
+                            ? this.props.currentPage.toUpperCase()
+                            : 'INFORMATION'}</h1>
+                    </Header>
                     <Content style={{ margin: '0 16px' }}>
-        <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>Bill is a {this.props.currentPage}.</div>
+                        <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>{
+                            this.props.currentPage !== undefined 
+                            ? this.props.currentPage === 'information'
+                                ? <InformationPage {...this.props} />
+                                : this.props.currentPage === 'form'
+                                    ? <FormPage {...this.props} />
+                                    : <MonitorPage {...this.props} /> : <InformationPage {...this.props} />
+                        }</div>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>Passport Demo ©2019</Footer>
                 </Layout>
