@@ -8,7 +8,7 @@ module.exports = class Database {
         this.servicename = "orclpdb.localdomain";
     }
 
-    async runSQL(username, password, SQLString, params) {
+    async runSQL(username, password, SQLString, params = []) {
         let connection;
         try {
             connection = await OracleDB.getConnection({

@@ -13,6 +13,7 @@ const PORT = 3500;
 const app = Express();
 const db = new Database();
 
+
 app.use(Cors()); app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
@@ -57,6 +58,20 @@ app.post('/passport/post', (request, response) => {
             religion, phonenumber, addprovincename, adddistrict, adddetail,
             fathername, mothername, recievingorganization, STATE]);
         response.send('OK');
+    }
+    catch (err) {
+        response.send(err);
+    }
+});
+
+app.post('/passport/search', (request, response) => {
+    let searchkey = request.body.params.searchkey;
+    let forms = undefined;
+    try {
+        db.runSQL('PASSPORT', 'PASSPORT', 'SELECT * FROM FORM').then(res => {
+            const find = res.rows.filter(f => f.FULLNAME.includes(searchkey));
+            response.send(JSON.stringify(find));
+        });
     }
     catch (err) {
         response.send(err);
