@@ -22,8 +22,8 @@ class ConnectComponent extends React.Component {
     }
     render() {
         return <Switch>
-            <Route path="/passport"
-                render={(routeProps) => <MasterPage {...this.props} {...routeProps} />} />
+            <Route path="/passport/:page?"
+                render={(routeProps) => <MasterPage {...this.props} {...routeProps} currentPage={routeProps.match.params.page}/>} />
             <Redirect to="/passport" />
         </Switch>
     }

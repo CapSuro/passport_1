@@ -1,8 +1,9 @@
 import React from 'react';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu, Icon } from 'antd';
+import { Link } from 'react-router-dom';
 
 const { Header, Content, Footer, Sider } = Layout;
-const { SubMenu } = Menu;
+
 
 export class MasterPage extends React.Component {
     state = {
@@ -21,54 +22,31 @@ export class MasterPage extends React.Component {
                     <div className="logo" />
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                         <Menu.Item key="1">
-                            <Icon type="pie-chart" />
-                            <span>Option 1</span>
+                            <Link to="/passport/information">
+                                <Icon type="info-circle" />
+                                <span>Information</span>
+                            </Link>
                         </Menu.Item>
                         <Menu.Item key="2">
-                            <Icon type="desktop" />
-                            <span>Option 2</span>
+                            <Link to="/passport/form">
+                                <Icon type="form" />
+                                <span>Form</span>
+                            </Link>
                         </Menu.Item>
-                        <SubMenu
-                            key="sub1"
-                            title={
-                                <span>
-                                    <Icon type="user" />
-                                    <span>User</span>
-                                </span>
-                            }
-                        >
-                            <Menu.Item key="3">Tom</Menu.Item>
-                            <Menu.Item key="4">Bill</Menu.Item>
-                            <Menu.Item key="5">Alex</Menu.Item>
-                        </SubMenu>
-                        <SubMenu
-                            key="sub2"
-                            title={
-                                <span>
-                                    <Icon type="team" />
-                                    <span>Team</span>
-                                </span>
-                            }
-                        >
-                            <Menu.Item key="6">Team 1</Menu.Item>
-                            <Menu.Item key="8">Team 2</Menu.Item>
-                        </SubMenu>
                         <Menu.Item key="9">
-                            <Icon type="file" />
-                            <span>File</span>
+                            <Link to="/passport/monitor">
+                                <Icon type="monitor" />
+                                <span>Monitor</span>
+                            </Link>
                         </Menu.Item>
                     </Menu>
                 </Sider>
                 <Layout>
                     <Header style={{ background: '#fff', padding: 0 }} />
                     <Content style={{ margin: '0 16px' }}>
-                        <Breadcrumb style={{ margin: '16px 0' }}>
-                            <Breadcrumb.Item>User</Breadcrumb.Item>
-                            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-                        </Breadcrumb>
-                        <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>Bill is a cat.</div>
+        <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>Bill is a {this.props.currentPage}.</div>
                     </Content>
-                    <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+                    <Footer style={{ textAlign: 'center' }}>Passport Demo ©2019</Footer>
                 </Layout>
             </Layout>
         );
