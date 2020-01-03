@@ -1,0 +1,1 @@
+export const religions = [{"value":"BD","name":"Bản địa"},{"value":"PG","name":"Phật Giáo"},{"value":"CG","name":"Công Giáo"},{"value":"TL","name":"Tin Lành"},{"value":"HH","name":"Hòa Hảo"},{"value":"CD","name":"Cao Đài"},{"value":"DG","name":"Đạo Giáo"},{"value":"NG","name":"Nho Giáo"},{"value":"HG","name":"Hồi Giáo"}]
