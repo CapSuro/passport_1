@@ -4,6 +4,7 @@ import { provinces } from './../Data/provinces';
 import { district } from './../Data/districts';
 import { nations } from './../Data/nations';
 import { religions } from './../Data/religions';
+const axios = require('axios').default;
 
 
 const { Option } = Select;
@@ -29,7 +30,11 @@ class RegistrationForm extends React.Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        axios.post("http://localhost:3500/passport/post",{
+          params: values
+        }).then(res => {
+          console.log(res);
+        });
       }
     });
   };
