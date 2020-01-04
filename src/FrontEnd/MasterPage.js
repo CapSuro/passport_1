@@ -36,10 +36,16 @@ export class MasterPage extends React.Component {
                                 <span>Form</span>
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="9">
+                        <Menu.Item key="3">
                             <Link to="/passport/monitor">
                                 <Icon type="monitor" />
                                 <span>Monitor</span>
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="4">
+                            <Link to="/passportadmin">
+                                <Icon type="login" />
+                                <span>Admin</span>
                             </Link>
                         </Menu.Item>
                     </Menu>
@@ -52,12 +58,12 @@ export class MasterPage extends React.Component {
                     </Header>
                     <Content style={{ margin: '0 16px' }}>
                         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>{
-                            this.props.currentPage !== undefined 
-                            ? this.props.currentPage === 'information'
-                                ? <InformationPage {...this.props} />
-                                : this.props.currentPage === 'form'
-                                    ? <FormPage {...this.props} />
-                                    : <MonitorPage {...this.props} /> : <InformationPage {...this.props} />
+                            this.props.currentPage !== undefined
+                                ? this.props.currentPage === 'information'
+                                    ? <InformationPage {...this.props} />
+                                    : this.props.currentPage === 'form'
+                                        ? <FormPage {...this.props} />
+                                        : <MonitorPage {...this.props} /> : <InformationPage {...this.props} />
                         }</div>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>Passport Demo ©2019</Footer>

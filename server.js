@@ -14,7 +14,31 @@ const app = Express();
 const db = new Database();
 
 
-app.use(Cors()); app.use(bodyParser.json());
+const acceptState = (state) => {
+    switch (state) {
+        case 'CNFRM':
+            return 'CHKNG';
+        case 'CHKNG':
+            return 'ACCPT';
+        case 'ACCPT':
+            return 'SAVED';
+        default:
+            return state;
+    }
+}
+
+const denyState = (state) => {
+    switch (state) {
+        case 'CNFRM':
+            return 'DENY';
+        case 'CHKNG':
+            return 'DENY';
+    }
+}
+
+
+app.use(Cors());
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -40,8 +64,7 @@ app.post('/passport/post', (request, response) => {
     let fathername = request.body.params.fatherfullname || '';
     let mothername = request.body.params.motherfullname || '';
     let recievingorganization = request.body.params.recievingorganization;
-    //let receivingaddress = request.body.params.receivingaddress;
-    let STATE = 'CN';
+    let STATE = 'CNFRM';
     let today = new Date();
     let dd = String(today.getDate()).padStart(2, '0');
     let mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -76,4 +99,61 @@ app.post('/passport/search', (request, response) => {
     catch (err) {
         response.send(err);
     }
+});
+
+app.post('/passportadmin/getdata', (request, response) => {
+    let username = request.body.params.username;
+    let password = request.body.params.password;
+    try {
+        db.runSQL(username, password, 'SELECT * FROM PASSPORT.FORM', []).then(res => {
+            response.send(JSON.stringify(res.rows));
+        });
+    }
+    catch (err) {
+        response.send(err);
+    }
+});
+
+app.post('/passportadmin/deny', (request, response) => {
+    let ID = request.body.params.ID
+    let state = request.body.params.state
+    let username = request.body.params.username
+    let password = request.body.params.password
+    let nextState = denyState(state);
+    try {
+        db.runSQL(username, password,
+            `UPDATE PASSPORT.FORM SET STATE = :nextState WHERE ID = :ID`, [nextState, ID]).then(res => {
+                response.send({
+                    affected: res.rowsAffected,
+                    ID: ID
+                });
+            });
+    }
+    catch (err) {
+        response.send(err);
+    }
+});
+
+app.post('/passportadmin/accept', (request, response) => {
+    let ID = request.body.params.ID
+    let state = request.body.params.state
+    let username = request.body.params.username
+    let password = request.body.params.password
+    let nextState = acceptState(state);
+    try {
+        db.runSQL(username, password,
+            `UPDATE PASSPORT.FORM SET STATE = :nextState WHERE ID = :ID`, [nextState, ID]).then(res => {
+                response.send({
+                    affected: res.rowsAffected,
+                    ID: ID
+                });
+            });
+    }
+    catch (err) {
+        response.send(err);
+    }
+});
+
+app.post('/login', (request, response) => {
+    response.send(true);
 });

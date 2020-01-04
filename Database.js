@@ -1,5 +1,6 @@
 const OracleDB = require('oracledb');
 OracleDB.outFormat = OracleDB.OUT_FORMAT_OBJECT;
+OracleDB.autoCommit = true;
 
 module.exports = class Database {
 
@@ -17,6 +18,57 @@ module.exports = class Database {
                 connectString: `${this.hostname}:1521/${this.servicename}`
             });
             const result = await connection.execute(SQLString, params);
+            return result;
+        } catch (err) {
+            console.log(err);
+        } finally {
+            if (connection) {
+                try {
+                    await connection.close();
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        }
+    }
+
+    async checkConnection(username, password) {
+        let connection;
+        try {
+            connection = await OracleDB.getConnection({
+                user: username,
+                password: password,
+                connectString: `${this.hostname}:1521/${this.servicename}`
+            });
+            if (connection) {
+                connection.close();
+                return true;
+            }
+            else {
+                return false;
+            }
+        } catch (err) {
+            console.log(err);
+        } finally {
+            if (connection) {
+                try {
+                    await connection.close();
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        }
+    }
+
+    async commit(username, password) {
+        let connection;
+        try {
+            connection = await OracleDB.getConnection({
+                user: username,
+                password: password,
+                connectString: `${this.hostname}:1521/${this.servicename}`
+            });
+            const result = await connection.execute('COMMIT');
             return result;
         } catch (err) {
             console.log(err);
