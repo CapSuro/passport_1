@@ -1,0 +1,22 @@
+create or replace PROCEDURE INSERT_FORM
+(id varchar2,
+fullname varchar2,
+gender int,
+birthday varchar2,
+birthplace varchar2,
+nation varchar2,
+religion varchar2,
+phonenumber varchar2,
+addprovince varchar2,
+adddistrict varchar2,
+adddetail varchar2,
+fathername varchar2,
+mothername varchar2,
+apoprovince varchar2,
+state varchar2
+) AS
+BEGIN
+    INSERT INTO FORM VALUES (id,fullname, gender, TO_DATE(birthday,'yyyy-mm-dd'), birthplace,
+    nation, religion, phonenumber, addprovince, adddistrict, adddetail,
+    fathername, mothername, apoprovince, state);
+END;
