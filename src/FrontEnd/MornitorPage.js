@@ -4,6 +4,20 @@ import { Table } from 'antd';
 
 const axios = require('axios');
 
+const getDecorateState = (state) => {
+    switch (state) {
+        case 'CNFRM':
+            return <Tag color="green">{state}</Tag>
+        case 'CHKNG':
+            return <Tag color="red">{state}</Tag>
+        case 'ACCPT':
+            return <Tag color="black">{state}</Tag>
+        case 'SAVED':
+            return <Tag color="blue">{state}</Tag>
+        default:
+            return <Tag color="orange">{state}</Tag>
+    }
+}
 
 const TableColumns = [
     {
@@ -39,65 +53,11 @@ const TableColumns = [
         key: 'BIRTHPLACE',
     },
     {
-        title: 'NATION',
-        key: 'NATION',
-        dataIndex: 'NATION',
-        key: 'NATION',
-    },
-    {
-        title: 'RELIGION',
-        key: 'RELIGION',
-        dataIndex: 'RELIGION',
-        key: 'RELIGION',
-    },
-    {
-        title: 'PHONENUMBER',
-        key: 'PHONENUMBER',
-        dataIndex: 'PHONENUMBER',
-        key: 'PHONENUMBER',
-    },
-    {
-        title: 'ADDPROVINCE',
-        key: 'ADDPROVINCE',
-        dataIndex: 'ADDPROVINCE',
-        key: 'ADDPROVINCE',
-    },
-    {
-        title: 'ADDDISTRICT',
-        key: 'ADDDISTRICT',
-        dataIndex: 'ADDDISTRICT',
-        key: 'ADDDISTRICT',
-    },
-    {
-        title: 'ADDADDRESS',
-        key: 'ADDADDRESS',
-        dataIndex: 'ADDADDRESS',
-        key: 'ADDADDRESS',
-    },
-    {
-        title: 'FATHERNAME',
-        key: 'FATHERNAME',
-        dataIndex: 'FATHERNAME',
-        key: 'FATHERNAME',
-    },
-    {
-        title: 'MOTHERNAME',
-        key: 'MOTHERNAME',
-        dataIndex: 'MOTHERNAME',
-        key: 'MOTHERNAME',
-    },
-    {
-        title: 'APOPROVINCE',
-        key: 'APOPROVINCE',
-        dataIndex: 'APOPROVINCE',
-        key: 'APOPROVINCE',
-    },
-    {
         title: 'STATE',
         key: 'STATE',
         dataIndex: 'STATE',
         key: 'STATE',
-        render: state => <span><Tag color="green">{state}</Tag></span>
+        render: state => getDecorateState(state)
     },
 ]
 
@@ -161,8 +121,9 @@ class MonitorPageComponent extends React.Component {
             </Form>
             <Divider />
             <Tag color="red">Result</Tag>
-            <Table style={{ marginTop: "2em", overflow: "scroll" }} columns={TableColumns}
-                dataSource={this.state.passports}></Table>
+            <Table style={{ marginTop: "2em", overflow: "hidden" }} columns={TableColumns}
+                dataSource={this.state.passports}
+                pagination={{pageSize: 15}}></Table>
         </div >
     }
 }

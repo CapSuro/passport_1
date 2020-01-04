@@ -30,9 +30,11 @@ const acceptState = (state) => {
 const denyState = (state) => {
     switch (state) {
         case 'CNFRM':
-            return 'DENY';
+            return 'DENID';
         case 'CHKNG':
-            return 'DENY';
+            return 'DENID';
+        default:
+            return state;
     }
 }
 
@@ -92,7 +94,7 @@ app.post('/passport/search', (request, response) => {
     let forms = undefined;
     try {
         db.runSQL('PASSPORT', 'PASSPORT', 'SELECT * FROM FORM').then(res => {
-            const find = res.rows.filter(f => f.FULLNAME.includes(searchkey));
+            const find = res.rows.filter(f => f.FULLNAME.toLowerCase().includes(searchkey.toLowerCase()));
             response.send(JSON.stringify(find));
         });
     }
@@ -120,6 +122,7 @@ app.post('/passportadmin/deny', (request, response) => {
     let username = request.body.params.username
     let password = request.body.params.password
     let nextState = denyState(state);
+    console.log(nextState);
     try {
         db.runSQL(username, password,
             `UPDATE PASSPORT.FORM SET STATE = :nextState WHERE ID = :ID`, [nextState, ID]).then(res => {
@@ -155,5 +158,17 @@ app.post('/passportadmin/accept', (request, response) => {
 });
 
 app.post('/login', (request, response) => {
-    response.send(true);
+    let username = request.body.params.username;
+    let password = request.body.params.password;
+    console.log(username, password);
+    try {
+        let checkconnection = db.getUserRole(username, password);
+        checkconnection.then(res => {
+            let role = res.rows[0]['GRANTED_ROLE'];
+            response.send({ checked: role ? true : false, username: username, role: role });
+        });
+    }
+    catch (err) {
+        response.send(err);
+    }
 });

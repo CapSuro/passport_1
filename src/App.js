@@ -7,7 +7,6 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 import { MasterPageConnector } from './FrontEnd/MasterPageConnector';
 import { BackendMasterPageConnector } from './BackEnd/BackendMasterPageConnector';
 import { Resident } from './BackEnd/Resident';
-import { AuthProviderImpl } from './Auth/AuthProviderImpl';
 
 function App() {
   return (

@@ -41,7 +41,6 @@ module.exports = class Database {
                 connectString: `${this.hostname}:1521/${this.servicename}`
             });
             if (connection) {
-                connection.close();
                 return true;
             }
             else {
@@ -69,6 +68,29 @@ module.exports = class Database {
                 connectString: `${this.hostname}:1521/${this.servicename}`
             });
             const result = await connection.execute('COMMIT');
+            return result;
+        } catch (err) {
+            console.log(err);
+        } finally {
+            if (connection) {
+                try {
+                    await connection.close();
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        }
+    }
+
+    async getUserRole(username, password) {
+        let connection;
+        try {
+            connection = await OracleDB.getConnection({
+                user: username,
+                password: password,
+                connectString: `${this.hostname}:1521/${this.servicename}`
+            });
+            const result = await connection.execute('SELECT GRANTED_ROLE FROM USER_ROLE_PRIVS');
             return result;
         } catch (err) {
             console.log(err);

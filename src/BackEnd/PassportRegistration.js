@@ -21,6 +21,19 @@ const getDecorateState = (state) => {
     }
 }
 
+const getAllowPassportState = (role) => {
+    switch (role) {
+        case 'XACTHUC':
+            return 'CNFRM'
+        case 'XETDUYET':
+            return 'CHKNG'
+        case 'LUUTRU':
+            return 'ACCPT'
+        default:
+            return ''
+    }
+}
+
 export class PassportRegistration extends React.Component {
     constructor(props) {
         super(props)
@@ -58,7 +71,9 @@ export class PassportRegistration extends React.Component {
                 password: this.props.password
             }
         }).then(res => {
-            console.log(res)
+            if (res.data.affected === 1) {
+                this.setState({ dataSource: this.state.dataSource.filter(p => p.ID != ID) });
+            }
         });
     }
 
@@ -70,6 +85,8 @@ export class PassportRegistration extends React.Component {
             }
         }).then(res => {
             let data = res.data;
+            let allowState = getAllowPassportState(this.props.role);
+            console.log(allowState);
             let columns = Object.keys(data[0]).map(k => {
                 if (k === 'BIRTHDAY') {
                     return ({
@@ -86,15 +103,15 @@ export class PassportRegistration extends React.Component {
                         dataIndex: k,
                         render: (s, record) => <span>{getDecorateState(s)}
                             <Divider type="vertical" />
-                            <Popconfirm title="Sure to Accept"
+                            <Popconfirm title={`Sure to ${this.props.role === 'LUUTRU' ? 'Save' : 'Accept'}`}
                                 onConfirm={() => this.acceptState(s, record.ID)}>
-                                <Button type="primary" >Accept</Button>
+                                <Button type="primary" >{this.props.role === 'LUUTRU' ? 'Save' : 'Accept'}</Button>
                             </Popconfirm>
-                            <Divider type="vertical" />
-                            <Popconfirm title="Sure to Deny"
-                                onConfirm={() => this.acceptState(s, record.ID)}>
+                            {this.props.role !== 'LUUTRU' && <Divider type="vertical" />}
+                            {this.props.role !== 'LUUTRU' && <Popconfirm title="Sure to Deny"
+                                onConfirm={() => this.denyState(s, record.ID)}>
                                 <Button type="danger">Deny</Button>
-                            </Popconfirm>
+                            </Popconfirm>}
                         </span>,
                         width: 300
                     })
@@ -107,7 +124,10 @@ export class PassportRegistration extends React.Component {
                     })
                 }
             });
-            this.setState({ dataSource: data, columns: columns });
+            this.setState({
+                dataSource: data.filter(f => f.STATE === allowState),
+                columns: columns
+            });
         });
     }
 
