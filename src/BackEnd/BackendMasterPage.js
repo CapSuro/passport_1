@@ -3,6 +3,8 @@ import { Layout, Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 import { PassportRegistration } from './PassportRegistration';
 import { LoginForm } from './LoginForm';
+import { WarningPage } from './WarningPage';
+
 
 const axios = require('axios');
 
@@ -48,13 +50,13 @@ export class BackendMasterPage extends React.Component {
                                 <span>Resident</span>
                             </Link>
                         </Menu.Item>
-                        {this.state.logined && <Menu.Item key="3">
+                        {(this.state.logined !== 'UnAuth' && this.state.logined !== false) && <Menu.Item key="3">
                             <Link to="/passport">
                                 <Icon type="logout" />
                                 <span>Log Out</span>
                             </Link>
                         </Menu.Item>}
-                        {this.state.logined === false && <Menu.Item key="4">
+                        {(this.state.logined === false || this.state.logined === 'UnAuth') && <Menu.Item key="4">
                             <Link to="/passport">
                                 <Icon type="arrow-left" />
                                 <span>Back</span>
@@ -67,10 +69,14 @@ export class BackendMasterPage extends React.Component {
                         <h1 style={{ color: 'white' }}>PASSPORT REGISTRATION</h1>
                     </Header>
                     <Content style={{ margin: '0 16px' }}>
-                        {this.state.logined === false ? <LoginForm updateLogin={this.updateLogin} /> : <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-                            <PassportRegistration {...this.props} username={this.state.username}
-                                password={this.state.username} role={this.state.role} />
-                        </div>}
+                        {this.state.logined === false
+                            ? <LoginForm updateLogin={this.updateLogin} />
+                            : this.state.username === undefined
+                                ? <WarningPage />
+                                : <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+                                    <PassportRegistration {...this.props} username={this.state.username}
+                                        password={this.state.username} role={this.state.role} />
+                                </div>}
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>Passport Demo ©2019</Footer>
                 </Layout>

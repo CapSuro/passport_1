@@ -12,8 +12,11 @@ class NormalLoginForm extends React.Component {
                 axios.post('http://localhost:3500/login', {
                     params: values
                 }).then(res => {
-                    if (res.data.checked) {
+                    if (res.data.checked === true) {
                         this.props.updateLogin(res.data.checked, res.data.username, res.data.role);
+                    }
+                    else {
+                        this.props.updateLogin('UnAuth', undefined, undefined);
                     }
                 });
             }

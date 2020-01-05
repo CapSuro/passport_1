@@ -160,15 +160,28 @@ app.post('/passportadmin/accept', (request, response) => {
 app.post('/login', (request, response) => {
     let username = request.body.params.username;
     let password = request.body.params.password;
-    console.log(username, password);
     try {
         let checkconnection = db.getUserRole(username, password);
         checkconnection.then(res => {
-            let role = res.rows[0]['GRANTED_ROLE'];
-            response.send({ checked: role ? true : false, username: username, role: role });
+            console.log(res);
+            if (res != undefined) {
+                let role = res.rows[0]['GRANTED_ROLE'];
+                response.send({ checked: role ? true : false, username: username, role: role });
+            }
+            else {
+                console.log(res);
+                response.send({ checked: false });
+            }
         });
+
     }
     catch (err) {
-        response.send(err);
+        console.log(err);
     }
+});
+
+app.post('/resident/database', (request, response) => {
+    let username = request.body.params.username
+    let password = request.body.params.password
+
 });

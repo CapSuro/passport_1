@@ -21,6 +21,7 @@ module.exports = class Database {
             return result;
         } catch (err) {
             console.log(err);
+            return undefined
         } finally {
             if (connection) {
                 try {
@@ -48,6 +49,7 @@ module.exports = class Database {
             }
         } catch (err) {
             console.log(err);
+            return undefined;
         } finally {
             if (connection) {
                 try {
@@ -94,6 +96,7 @@ module.exports = class Database {
             return result;
         } catch (err) {
             console.log(err);
+            return undefined;
         } finally {
             if (connection) {
                 try {
