@@ -183,5 +183,20 @@ app.post('/login', (request, response) => {
 app.post('/resident/database', (request, response) => {
     let username = request.body.params.username
     let password = request.body.params.password
-
+    let resdata = {};
+    try {
+        let demo = db.runSQL(username, password, 'SELECT * FROM RESIDENT.DEMO');
+        demo.then(res => {
+            resdata['Demo'] = res.rows;
+            let demo2 = db.runSQL(username, password, 'SELECT * FROM RESIDENT.DEMO2');
+            demo2.then(ress => {
+                resdata['Demo2'] = ress.rows;
+                response.send({ data: resdata });
+            })
+        });
+    }
+    catch (err) {
+        console.log(err);
+        response.send(undefined);
+    }
 });

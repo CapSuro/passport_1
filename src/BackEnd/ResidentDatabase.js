@@ -34,12 +34,31 @@ const getAllowPassportState = (role) => {
     }
 }
 
+const getTableData = (rows) => {
+    let columns = Object.keys(rows[0]);
+    columns = columns.map(c => ({
+        title: c,
+        dataIndex: c,
+        type: c
+    }));
+    let dataSource = rows;
+    return { columns, dataSource };
+}
+const getTablesData = (tables) => {
+    let ret = [];
+    for (let k in tables) {
+        let table = getTableData(tables[k]);
+        ret.push({ tablename: k, table: table });
+    }
+    return ret;
+}
+
+
 export class ResidentDatabase extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            columns: [],
-            dataSource: []
+            tables: []
         }
     }
 
@@ -84,57 +103,16 @@ export class ResidentDatabase extends React.Component {
                 password: this.props.password
             }
         }).then(res => {
-            let data = res.data;
-            let allowState = getAllowPassportState(this.props.role);
-            console.log(allowState);
-            let columns = Object.keys(data[0]).map(k => {
-                if (k === 'BIRTHDAY') {
-                    return ({
-                        title: k,
-                        type: k,
-                        dataIndex: k,
-                        render: b => <span>{b.substring(0, 10)}</span>
-                    })
-                }
-                else if (k === 'STATE') {
-                    return ({
-                        title: k,
-                        type: k,
-                        dataIndex: k,
-                        render: (s, record) => <span>{getDecorateState(s)}
-                            <Divider type="vertical" />
-                            <Popconfirm title={`Sure to ${this.props.role === 'LUUTRU' ? 'Save' : 'Accept'}`}
-                                onConfirm={() => this.acceptState(s, record.ID)}>
-                                <Button type="primary" >{this.props.role === 'LUUTRU' ? 'Save' : 'Accept'}</Button>
-                            </Popconfirm>
-                            {this.props.role !== 'LUUTRU' && <Divider type="vertical" />}
-                            {this.props.role !== 'LUUTRU' && <Popconfirm title="Sure to Deny"
-                                onConfirm={() => this.denyState(s, record.ID)}>
-                                <Button type="danger">Deny</Button>
-                            </Popconfirm>}
-                        </span>,
-                        width: 300
-                    })
-                }
-                else {
-                    return ({
-                        title: k,
-                        type: k,
-                        dataIndex: k,
-                    })
-                }
-            });
-            this.setState({
-                dataSource: data.filter(f => f.STATE === allowState),
-                columns: columns
-            });
+            this.setState({ tables: res.data.data });
         });
     }
 
     render() {
-        return <Table style={{ overflowX: 'scroll' }}
-            columns={this.state.columns}
-            dataSource={this.state.dataSource}
-            pagination={{ pageSize: 15 }} />
+        return getTablesData(this.state.tables).map(table =>
+            <div>
+                <h2>{table.tablename}</h2>
+                <Table columns={table.table.columns} dataSource={table.table.dataSource}
+                    pagination={{ pageSize: 15 }} style={{ overflow: 'hidden' }} />
+            </div>)
     }
 }
