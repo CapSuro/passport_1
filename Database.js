@@ -5,7 +5,7 @@ OracleDB.autoCommit = true;
 module.exports = class Database {
 
     constructor() {
-        this.hostname = "SERVER";
+        this.hostname = "172.20.10.6";
         this.servicename = "orclpdb.localdomain";
     }
 

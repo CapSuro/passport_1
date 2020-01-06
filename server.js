@@ -45,10 +45,10 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.listen(PORT, () => console.log('Server is running on PORT 3500'));
+app.listen(PORT, () => console.log('Server is running on PORT ' + PORT));
 
 app.get('/', (request, response) => {
-    response.send('Hello Motherf*cker!');
+    response.send('Hello');
 });
 
 app.post('/passport/post', (request, response) => {
@@ -107,9 +107,16 @@ app.post('/passportadmin/getdata', (request, response) => {
     let username = request.body.params.username;
     let password = request.body.params.password;
     try {
-        db.runSQL(username, password, 'SELECT * FROM PASSPORT.FORM', []).then(res => {
-            response.send(JSON.stringify(res.rows));
-        });
+        if (username === 'LUUTRU1') {
+            db.runSQL(username, password, 'SELECT * FROM PASSPORT.VIEW_LUUTRU', []).then(res => {
+                response.send(JSON.stringify(res.rows));
+            });
+        }
+        else {
+            db.runSQL(username, password, 'SELECT * FROM PASSPORT.FORM', []).then(res => {
+                response.send(JSON.stringify(res.rows));
+            });
+        }
     }
     catch (err) {
         response.send(err);
